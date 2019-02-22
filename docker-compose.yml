@@ -1,0 +1,38 @@
+version: '3.3'
+
+services:
+
+        banco:
+                image: mysql:5.6
+                ports:
+                        - "3306:3306"
+                volumes:
+                        - /Flask:/var/lib/mysql
+                environment:
+                        - MYSQL_ROOT_PASSWORD=root
+                        - MYSQL_DATABASE=projeto
+
+        phpmyadmin:
+                image: phpmyadmin/phpmyadmin:latest
+                depends_on:
+                        - banco
+                links:
+                        - banco
+                ports:
+                        - "80:80"
+                environment:
+                        - PMA_ARBITRARY=1
+
+        servidor:
+                build:
+                        context: .
+                        dockerfile: Dockerfile
+                volumes:
+                        - /Flask:/root
+                depends_on:
+                        - banco
+                links:
+                        - banco
+                ports:
+                        - "5000:5000"
+                command: python3 /root/pagina.py
