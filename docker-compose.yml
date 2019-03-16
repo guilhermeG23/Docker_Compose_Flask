@@ -1,38 +1,69 @@
 version: '3.3'
 
+#Iniciando o file
 services:
 
+        #Criando o Banco
         banco:
-                image: mysql:5.6
+                #Usa essa imagem para criar o phpmyadmin
+                image: mysql:5.7
+                #Libera essa porta
                 ports:
                         - "3306:3306"
-                volumes:
-                        - /Flask:/var/lib/mysql
+                #Setando variaveis para o banco
                 environment:
-                        - MYSQL_ROOT_PASSWORD=root
-                        - MYSQL_DATABASE=projeto
+                        MYSQL_ROOT_PASSWORD: root
+                        MYSQL_DATABASE: projeto
 
+        #Criando o php my admin somente para ter uma forma de adminstrar o mesmo com mais facilidade
         phpmyadmin:
+                #Usa essa imagem para criar o phpmyadmin
                 image: phpmyadmin/phpmyadmin:latest
+                #Depende do banco e já link eles na mesma rede                  
                 depends_on:
                         - banco
                 links:
                         - banco
+                #Libera essa porta para conexão
                 ports:
-                        - "80:80"
+                        - "8080:80"
                 environment:
                         - PMA_ARBITRARY=1
 
-        servidor:
+        #Criando o server de bk
+        servidor_servico:
+                #Usa essa imagem
                 build:
                         context: .
                         dockerfile: Dockerfile
+                #Cria o volume no root
                 volumes:
-                        - /Flask:/root
+                        - ./Sociedade/:/root
+                #Depende do banco e já link eles na mesma rede
                 depends_on:
                         - banco
                 links:
                         - banco
+                #Inicia o comando shell quando subir o banco
+                command: bash /root/bk.sh
+
+        #Criando o server de aplicacao
+        servidor_aplicacao:
+                #Usa essa imagem
+                build:
+                        context: .
+                        dockerfile: Dockerfile
+                #Cria o volume no root
+                volumes:
+                        - ./Sociedade/:/root
+                #Depende do banco e já link eles na mesma rede                  
+                depends_on:
+                        - banco
+                links:
+                        - banco
+                #Libera essa porta para conexão
                 ports:
                         - "5000:5000"
-                command: python3 /root/pagina.py
+                #Inicia o comando shell quando subir o banco
+                command: bash /root/shell.sh
+
