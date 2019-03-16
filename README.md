@@ -18,26 +18,24 @@ Criar uma estrutura simples de containers para o trabalho da faculdade:
 
 #Instalando o Curl
 
-apt install curl
+- apt install curl
 
 # Instalando o Docker
 
 Instalando a versão mais recente do Docker no Linux:
-
-curl -sSL https://get.docker.com/ | sh 
+- curl -sSL https://get.docker.com/ | sh 
 
 Instalando o Docker-compose:
+- curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 
-curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+Dando permissão de programa ao compose
+- chmod +x /usr/local/bin/docker-compose
 
-E dando permissão de programa ao compose
-chmod +x /usr/local/bin/docker-compose
+# Instalando o Git
 
-#Instalando o Git
+-apt install git
 
-apt install git
-
-#Editado para o funcionamento do flask docker
+# Editado para o funcionamento do flask docker
 
 Editado linha do run.py para adicionar a parte do host='0.0.0.0' nos app.run()
 
